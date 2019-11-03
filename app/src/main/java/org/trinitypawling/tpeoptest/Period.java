@@ -307,25 +307,6 @@ public class Period {
     public void setStart(WTime a) {
         start = a;
     }
-    /*public void drawThis(Canvas c) {
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setTextSize(20);
-        paint.setStrokeWidth(2);
-
-        WTime now = new WTime();
-        WTime eight = new WTime(start.getDay(),8,0);
-        int cs = (start.ticks - now.ticks) / 150;
-        int ce = (end.ticks - start.ticks) / 150;
-        Log.i("aaaa", ""+cs);
-        Log.i("aaaa", ""+ce);
-        Log.i("aaaa", ""+start.ticks/150);
-        c.drawRect(0, cs, 150, ce, paint);
-        c.drawText(start.getHourAMPM() + ":" + start.getMinuteS(), 5, cs + 20, paint);
-        c.drawText(end.getHourAMPM() + ":" + end.getMinuteS(), 109, ce - 10, paint);
-        c.drawText(subject, 40, (ce + cs) / 2, paint);
-        c.drawText(getPeriod(), 72, (ce - cs) / 3 + cs, paint);
-    }*/
 
     public WTime getEnd() {
         return end;
