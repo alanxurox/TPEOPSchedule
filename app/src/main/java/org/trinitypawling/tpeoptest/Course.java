@@ -37,12 +37,16 @@ public class Course {
         courses = (ArrayList<Course>) c;
     }
 
-    public static String[] getNameList() {
-        int size = getCourses().size();
-        String[] names = new String[size];
+    public static String[] getNameList(int period) {
+        ArrayList<Course> temp = new ArrayList<>();
+        for (Course c : getCourses()) {
+            if (c.getPeriod() == period)
+                temp.add(c);
+        }
+        String[] names = new String[temp.size()];
 
-        for (int i = 0; i < size; i++) {
-            names[i] = getCourses().get(i).getName();
+        for (int i = 0; i < temp.size(); i++) {
+            names[i] = temp.get(i).getName();
         }
 
         return names;
