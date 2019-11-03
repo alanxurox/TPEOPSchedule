@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingsActivity">
+
+    <LinearLayout
+        android:layout_width="414dp"
+        android:layout_height="637dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="-3dp">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="137dp"
+            android:layout_height="732dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="16dp"
+            tools:layout_editor_absoluteY="-1dp">
+
+            <Switch
+                android:id="@+id/switchB"
+                android:layout_width="102dp"
+                android:layout_height="17dp"
+                android:checked="false"
+                android:text="B Week" />
+
+            <TextView
+                android:id="@+id/p1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Period 1"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/p2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="period 2"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/p3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="period 3"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/p4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="period 4"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/p5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="period 5"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/p6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="period 6"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/p7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="period 7"
+                android:textSize="24sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/vl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:orientation="vertical">
+
+            <Space
+                android:id="@+id/space"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+
+            <AutoCompleteTextView
+                android:id="@+id/tv1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="Select a period"
+                android:textSize="8sp" />
+
+            <AutoCompleteTextView
+                android:id="@+id/tv2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="Select a period"
+                android:textSize="8sp" />
+
+            <AutoCompleteTextView
+                android:id="@+id/tv3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="Select a period"
+                android:textSize="8sp" />
+
+            <AutoCompleteTextView
+                android:id="@+id/tv4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="Select a period"
+                android:textSize="8sp" />
+
+            <AutoCompleteTextView
+                android:id="@+id/tv5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="Select a period"
+                android:textSize="8sp" />
+
+            <AutoCompleteTextView
+                android:id="@+id/tv6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="Select a period"
+                android:textSize="8sp" />
+
+            <AutoCompleteTextView
+                android:id="@+id/tv7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:hint="Select a period"
+                android:textSize="8sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
