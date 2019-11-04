@@ -46,7 +46,8 @@ public class Course {
         String[] names = new String[temp.size()];
 
         for (int i = 0; i < temp.size(); i++) {
-            names[i] = temp.get(i).getName();
+            //TODO fix: check strings equal in SettingsActivity wouldnt work. Commented out.
+            names[i] = temp.get(i).getName();// + " - " + temp.get(i).getTeacher();
         }
 
         return names;
@@ -106,5 +107,18 @@ public class Course {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "courseNo=" + courseNo +
+                ", teacher='" + teacher + '\'' +
+                ", period=" + period +
+                ", classRoom='" + classRoom + '\'' +
+                ", term=" + term +
+                ", section=" + section +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
