@@ -2,6 +2,7 @@ package org.trinitypawling.tpeoptest;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -9,24 +10,27 @@ import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class SettingsActivity extends AppCompatActivity {
 
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String COURSES = "courses";
     public static final String SWITCH = "switch";
+    public static final String LIST = "list";
     ArrayList<Course> schedule = new ArrayList<>();
     Switch aSwitch;
-    Set<String> courses;
     boolean bWeek;
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        aSwitch = findViewById(R.id.switchB);
 
         for (int i = 1; i <= 7; i++) {
             String viewID = "tv" + i;
@@ -35,7 +39,12 @@ public class SettingsActivity extends AppCompatActivity {
                     android.R.layout.simple_list_item_1, Course.getNameList(i));
             AutoCompleteTextView editText = findViewById(rID);
             editText.setAdapter(adapter);
+            if (schedule.size() > 0)
+                editText.setText(schedule.get(i).getName());
         }
+
+        loadData();
+        updateViews();
 
     }
 
@@ -43,8 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        saveData();
-        final Switch aSwitch = findViewById(R.id.switchB);
+        schedule.clear();
         if (aSwitch.isChecked())
             Period.loadPeriodsB();
         else
@@ -55,42 +63,48 @@ public class SettingsActivity extends AppCompatActivity {
             int rID = getResources().getIdentifier(viewID, "id", getPackageName());
             AutoCompleteTextView editText = findViewById(rID);
             for (Course course : Course.getCourses()) {
-                if (editText.getText().equals(course.getName()) && i == course.getPeriod())
+                if (course.getName().equals(editText.getText().toString()) && i == course.getPeriod()) {
                     schedule.add(course);
+                    continue;
+                }
+            }
+            Log.i("info", "" + schedule.size());
+            for (Course course : schedule) {
+                Log.i("info", "" + course);
             }
         }
+
+        saveData();
     }
 
     public void saveData() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        Set<String> courses = new HashSet<>();
+        Gson gson = new Gson();
+        String json = gson.toJson(schedule);
 
-        for (Course course : schedule) {
-            courses.add(course.getName());
-        }
-
-        editor.putStringSet(COURSES, courses);
+        editor.putString(COURSES, json);
         editor.putBoolean(SWITCH, aSwitch.isChecked());
+        editor.apply();
     }
 
     public void loadData() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        courses = sharedPreferences.getStringSet(COURSES, new HashSet<String>() {
-        });
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(COURSES, null);
+        Type type = new TypeToken<ArrayList<Course>>() {
+        }.getType();
+        schedule = gson.fromJson(json, type);
+
+        if (schedule == null)
+            schedule = new ArrayList<Course>();
+
         bWeek = sharedPreferences.getBoolean(SWITCH, false);
 
     }
 
     public void updateViews() {
-        //TODO load the text view from hash set/arraylist?
-        for (int i = 1; i <= 7; i++) {
-            String viewID = "tv" + i;
-            int rID = getResources().getIdentifier(viewID, "id", getPackageName());
-            AutoCompleteTextView editText = findViewById(rID);
-            //editText.setText();
-
-        }
+        aSwitch.setChecked(bWeek);
     }
 
     @Override
@@ -110,5 +124,6 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+        loadData();
     }
 }
