@@ -21,16 +21,17 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String COURSES = "courses";
     public static final String SWITCH = "switch";
-    public static final String LIST = "list";
-    ArrayList<Course> schedule = new ArrayList<>();
+    ArrayList<String> schedule = new ArrayList<>();
     Switch aSwitch;
     boolean bWeek;
-
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         aSwitch = findViewById(R.id.switchB);
+
+        loadData();
+        updateViews();
 
         for (int i = 1; i <= 7; i++) {
             String viewID = "tv" + i;
@@ -39,12 +40,10 @@ public class SettingsActivity extends AppCompatActivity {
                     android.R.layout.simple_list_item_1, Course.getNameList(i));
             AutoCompleteTextView editText = findViewById(rID);
             editText.setAdapter(adapter);
-            if (schedule.size() > 0)
-                editText.setText(schedule.get(i).getName());
+
         }
 
-        loadData();
-        updateViews();
+
 
     }
 
@@ -62,19 +61,13 @@ public class SettingsActivity extends AppCompatActivity {
             String viewID = "tv" + i;
             int rID = getResources().getIdentifier(viewID, "id", getPackageName());
             AutoCompleteTextView editText = findViewById(rID);
-            for (Course course : Course.getCourses()) {
-                if (course.getName().equals(editText.getText().toString()) && i == course.getPeriod()) {
-                    schedule.add(course);
-                    continue;
-                }
-            }
-            Log.i("info", "" + schedule.size());
-            for (Course course : schedule) {
-                Log.i("info", "" + course);
-            }
+
+            schedule.add(editText.getText().toString());
         }
 
+
         saveData();
+
     }
 
     public void saveData() {
@@ -92,19 +85,32 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPreferences.getString(COURSES, null);
-        Type type = new TypeToken<ArrayList<Course>>() {
+        Type type = new TypeToken<ArrayList<String>>() {
         }.getType();
         schedule = gson.fromJson(json, type);
-
-        if (schedule == null)
-            schedule = new ArrayList<Course>();
 
         bWeek = sharedPreferences.getBoolean(SWITCH, false);
 
     }
 
     public void updateViews() {
+
         aSwitch.setChecked(bWeek);
+
+        for (int i = 1; i <= 7; i++) {
+            String viewID = "tv" + i;
+            int rID = getResources().getIdentifier(viewID, "id", getPackageName());
+            AutoCompleteTextView editText = findViewById(rID);
+
+            try {
+                editText.setText(schedule.get(i - 1));
+            } catch (IndexOutOfBoundsException e) {
+                Log.i("info", "schedule not filled yet");
+            } catch (NullPointerException e) {
+                Log.i("info", "schedule item at " + i + " is empty");
+            }
+
+        }
     }
 
     @Override

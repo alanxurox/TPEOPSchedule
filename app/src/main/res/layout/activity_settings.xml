@@ -88,10 +88,12 @@
             android:layout_marginStart="20dp"
             android:orientation="vertical">
 
-            <Space
-                android:id="@+id/space"
+            <TextView
+                android:id="@+id/subject"
                 android:layout_width="match_parent"
-                android:layout_height="40dp" />
+                android:layout_height="44dp"
+                android:gravity="center_vertical"
+                android:text="Subject" />
 
             <AutoCompleteTextView
                 android:id="@+id/tv1"
@@ -149,6 +151,7 @@
                 android:hint="Select a period"
                 android:textSize="8sp" />
         </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
