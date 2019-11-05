@@ -47,7 +47,7 @@ public class Course {
 
         for (int i = 0; i < temp.size(); i++) {
             //TODO fix: check strings equal in SettingsActivity wouldnt work. Commented out.
-            names[i] = temp.get(i).getName();// + " - " + temp.get(i).getTeacher();
+            names[i] = temp.get(i).getName() + " - " + temp.get(i).getTeacher();
         }
 
         return names;
