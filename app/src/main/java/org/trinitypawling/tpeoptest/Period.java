@@ -89,6 +89,16 @@ public class Period {
         periods.add(new Period(new WTime(5, 12, 30), 45, "6"));
         periods.add(new Period(new WTime(5, 13, 20), 45, "7"));
         periods.add(new Period(new WTime(5, 14, 10), 45, "4"));
+
+        for (int i = 0; i < periods.size(); i++) {
+
+            for (int j = 1; j <= 7; j++) {
+
+                if (Integer.parseInt(periods.get(i).getPeriod()) == j) {
+
+                }
+            }
+        }
     }
 
     // TODO: 2019/10/15 finish b week hardcode
