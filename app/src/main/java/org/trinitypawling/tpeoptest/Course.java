@@ -47,10 +47,25 @@ public class Course {
 
         for (int i = 0; i < temp.size(); i++) {
             //TODO fix: check strings equal in SettingsActivity wouldnt work. Commented out.
-            names[i] = temp.get(i).getName() + " - " + temp.get(i).getTeacher();
+            names[i] = temp.get(i).getName() + ", " + temp.get(i).getTeacher() + ", " + temp.get(i).getPeriod();
         }
 
         return names;
+    }
+
+    public static Course find(String nameTeacherPeriod) {
+
+        String[] tokens = nameTeacherPeriod.split(", ");
+
+        for (Course c : courses) {
+
+            if (tokens[0].equals(c.getName()) &&
+                    tokens[1].equals(c.getTeacher()) &&
+                    Integer.parseInt(tokens[2]) == c.getPeriod())
+
+                return c;
+        }
+        return null;
     }
 
     public int getCourseNo() {
