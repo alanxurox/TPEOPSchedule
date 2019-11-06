@@ -21,7 +21,8 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String COURSES = "courses";
     public static final String SWITCH = "switch";
-    ArrayList<String> schedule = new ArrayList<>();
+    static ArrayList<String> schedule = new ArrayList<>();
+    ArrayList<Course> courseList = new ArrayList<>();
     Switch aSwitch;
     boolean bWeek;
 
@@ -52,10 +53,6 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         schedule.clear();
-        if (aSwitch.isChecked())
-            Period.loadPeriodsB();
-        else
-            Period.loadPeriodsA();
 
         for (int i = 1; i <= 7; i++) {
             String viewID = "tv" + i;
@@ -64,6 +61,11 @@ public class SettingsActivity extends AppCompatActivity {
 
             schedule.add(editText.getText().toString());
         }
+
+        if (aSwitch.isChecked())
+            Period.loadPeriodsB();
+        else
+            Period.loadPeriodsA();
 
 
         saveData();
@@ -121,13 +123,7 @@ public class SettingsActivity extends AppCompatActivity {
         aSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (aSwitch.isChecked()) {
-                    Period.loadPeriodsB();
-                    bWeek = true;
-                } else {
-                    Period.loadPeriodsA();
-                    bWeek = false;
-                }
+                bWeek = aSwitch.isChecked();
             }
         });
         loadData();
