@@ -11,6 +11,7 @@ public class Period {
     static int lastTicks;
     static boolean isAWeek;
     private static ArrayList<Period> periods = new ArrayList<>();
+    private static Course course;
     WTime start;
     WTime end;
     String period;
@@ -43,6 +44,27 @@ public class Period {
         room = "";
         teacher = "";
     }
+
+    public static void loadCourses() {
+        for (Period p : periods) {
+            for (String s : SettingsActivity.schedule) {
+                try {
+                    course = Course.find(s);
+                    if (Integer.parseInt(p.getPeriod()) == course.getPeriod()) {
+                        p.setSubject(course.getName());
+                        p.setTeacher(course.getTeacher());
+                        p.setRoom(course.getClassRoom());
+                    }
+                } catch (NullPointerException e) {
+                    Log.i("info", "didn't find a course: perhaps the course list in settings is empty or course info not in the database?");
+                } catch (NumberFormatException e) {
+                    Log.i("info", "this is a " + p.getPeriod() + " period");
+                }
+
+            }
+        }
+    }
+
 
     public static void loadPeriodsA() {
         periods.clear();
@@ -90,15 +112,12 @@ public class Period {
         periods.add(new Period(new WTime(5, 13, 20), 45, "7"));
         periods.add(new Period(new WTime(5, 14, 10), 45, "4"));
 
-        for (int i = 0; i < periods.size(); i++) {
+        loadCourses();
+    }
 
-            for (int j = 1; j <= 7; j++) {
-
-                if (Integer.parseInt(periods.get(i).getPeriod()) == j) {
-
-                }
-            }
-        }
+    public static boolean AWeek() {
+        isAWeek = periods.size() < 34;
+        return isAWeek;
     }
 
     // TODO: 2019/10/15 finish b week hardcode
@@ -153,9 +172,13 @@ public class Period {
         periods.add(new Period(new WTime(6, 9, 20), 45, "1"));
         periods.add(new Period(new WTime(6, 10, 10), 45, "7"));
         periods.add(new Period(new WTime(6, 11, 00), 45, "5"));
+
+        loadCourses();
     }
 
-    public static void setAllPeriodInfo(String num, String meets, String className, String room, String teacher) {
+
+    public static void setAllPeriodInfo(String num, String meets, String className, String
+            room, String teacher) {
         System.out.println("num " + num + " meets " + meets + " className " + className + " Room " + room + " Teacher " + teacher);
         int meetsSession = 1;
         int meetsNum = 0;
@@ -352,8 +375,8 @@ public class Period {
         c.drawRect(150 * (dayOfWeek - 1) + 100, cs, 150 * (dayOfWeek - 1) + 250, ce, paint);
         c.drawText(start.getHourAMPM() + ":" + start.getMinuteS(), 150 * (dayOfWeek - 1) + 105, cs + 20, paint);
         c.drawText(end.getHourAMPM() + ":" + end.getMinuteS(), 150 * (dayOfWeek - 1) + 209, ce - 10, paint);
-        c.drawText(subject, 150 * (dayOfWeek - 1) + 140, (ce + cs) / 2, paint);
-        c.drawText(getPeriod(), 150 * (dayOfWeek - 1) + 172, (ce - cs) / 3 + cs, paint);
+        c.drawText(subject, 150 * (dayOfWeek - 1) + 140, (ce - cs) / 3 + cs, paint);
+        c.drawText(getPeriod(), 150 * (dayOfWeek - 1) + 140, (ce + cs) / 2, paint);
     }
 
     public void drawThis(Canvas c) {
@@ -395,7 +418,15 @@ public class Period {
         c.drawText(getPeriod(), 72, (ce - cs) / 3 + cs, paint);
     }
 
+    @Override
     public String toString() {
-        return "Period :" + period + " starts " + start + " ends " + end;
+        return "Period{" +
+                "start=" + start +
+                ", end=" + end +
+                ", period='" + period + '\'' +
+                ", teacher='" + teacher + '\'' +
+                ", room='" + room + '\'' +
+                ", subject='" + subject + '\'' +
+                '}';
     }
 }
