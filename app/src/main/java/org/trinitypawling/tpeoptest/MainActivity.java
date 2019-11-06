@@ -1,6 +1,7 @@
 package org.trinitypawling.tpeoptest;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,13 +15,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     final List<Course> COURSES = new ArrayList<>();
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final String WEEK = "week";
+    public static final String COURSE = "courses";
     Intent settings;
     Intent week;
     Intent day;
@@ -30,14 +37,48 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_main);
         MyDrawable myDrawable = new MyDrawable();
         ImageView imageView = findViewById(R.id.imageView);
         imageView.setImageDrawable(myDrawable);
         imageView.setContentDescription("a");
-        Period.loadPeriodsA();
 
+        this.loadData();
+        this.updateViews();
+
+    }
+
+    public void updateViews() {
+        if (Period.isAWeek)
+            Period.loadPeriodsA();
+        else
+            Period.loadPeriodsB();
+    }
+
+    //TODO read saved schedule from settingsActivity when program starts.
+    public void loadData() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+
+        Period.isAWeek = sharedPreferences.getBoolean(WEEK, false);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(COURSE, null);
+        Type type = new TypeToken<ArrayList<String>>() {
+        }.getType();
+        SettingsActivity.schedule = gson.fromJson(json, type);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        saveData();
+    }
+
+    public void saveData() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean(WEEK, Period.AWeek());
+        editor.apply();
     }
 
     @Override
