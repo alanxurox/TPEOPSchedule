@@ -3,6 +3,16 @@ package org.trinitypawling.tpeoptest;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class holds information of a subject including
+ * course number
+ * teacher
+ * period number
+ * class room
+ * section
+ * and name of the subject
+ * to be instantiated
+ */
 public class Course {
     static ArrayList<Course> courses = new ArrayList<>();
     int courseNo;
@@ -37,22 +47,35 @@ public class Course {
         courses = (ArrayList<Course>) c;
     }
 
+    /**
+     * This method finds all the subjects that has period int period.
+     *
+     * @param period
+     * @return
+     */
     public static String[] getNameList(int period) {
         ArrayList<Course> temp = new ArrayList<>();
-        for (Course c : getCourses()) {
+        for (Course c : courses) {
             if (c.getPeriod() == period)
                 temp.add(c);
         }
         String[] names = new String[temp.size()];
 
         for (int i = 0; i < temp.size(); i++) {
-            //TODO fix: check strings equal in SettingsActivity wouldnt work. Commented out.
+
+            //Shows the name, teacher, and period so that users can see on the AutoComplete
             names[i] = temp.get(i).getName() + ", " + temp.get(i).getTeacher() + ", " + temp.get(i).getPeriod();
         }
 
         return names;
     }
 
+    /**
+     * This method finds a Course object with the string nameTeacherPeriod and return the Course
+     *
+     * @param nameTeacherPeriod
+     * @return
+     */
     public static Course find(String nameTeacherPeriod) {
 
         String[] tokens = nameTeacherPeriod.split(", ");

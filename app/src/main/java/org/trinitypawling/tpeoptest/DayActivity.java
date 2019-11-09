@@ -9,6 +9,9 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+/**
+ * This Activity draws today's schedule only
+ */
 public class DayActivity extends AppCompatActivity {
 
     @Override
@@ -22,6 +25,11 @@ public class DayActivity extends AppCompatActivity {
             super(context);
         }
 
+        /**
+         * On instantiating the object, on draw is called
+         *
+         * @param canvas
+         */
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             int x = getWidth();

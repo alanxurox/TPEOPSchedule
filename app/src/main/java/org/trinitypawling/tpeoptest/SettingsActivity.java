@@ -16,40 +16,51 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+/**
+ * Settings Activity for user to set their own courses and switch between a and b week
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String COURSES = "courses";
     public static final String SWITCH = "switch";
-    static ArrayList<String> schedule = new ArrayList<>();
-    ArrayList<Course> courseList = new ArrayList<>();
+    static ArrayList<String> schedule;
+    static SharedPreferences sharedPreferences;
     Switch aSwitch;
     boolean bWeek;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+//        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        schedule = new ArrayList<>();
         setContentView(R.layout.activity_settings);
         aSwitch = findViewById(R.id.switchB);
 
+        //load and update data stored in shared preferences
         loadData();
         updateViews();
 
+        //Loops through the auto complete text views, and set the according subjects to the correct periods
         for (int i = 1; i <= 7; i++) {
             String viewID = "tv" + i;
             int rID = getResources().getIdentifier(viewID, "id", getPackageName());
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, Course.getNameList(i));
+
             AutoCompleteTextView editText = findViewById(rID);
             editText.setAdapter(adapter);
 
         }
 
 
-
     }
 
 
     @Override
+    /**
+     * On exit, this method stores the data, loads the periods into the graphics
+     */
     protected void onDestroy() {
         super.onDestroy();
         schedule.clear();
@@ -72,29 +83,49 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Method store data using Google GSON and sharedPreferences
+     */
     public void saveData() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+//        sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+//        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        //Utilize a google library that converts array list into json format for storage
         Gson gson = new Gson();
         String json = gson.toJson(schedule);
 
+        //put in the converted json arraylist and bool into the stored preference
         editor.putString(COURSES, json);
         editor.putBoolean(SWITCH, aSwitch.isChecked());
+        editor.commit();
         editor.apply();
     }
 
+    /**
+     * Method load data on start
+     */
     public void loadData() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+//        sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+//        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         Gson gson = new Gson();
         String json = sharedPreferences.getString(COURSES, null);
+
+        //To load the arraylist, a type token that specifies the array list is needed
         Type type = new TypeToken<ArrayList<String>>() {
         }.getType();
         schedule = gson.fromJson(json, type);
 
+        //
+        if (schedule == null)
+            schedule = new ArrayList<>();
         bWeek = sharedPreferences.getBoolean(SWITCH, false);
 
     }
 
+    /**
+     * Method set the correct week boolean and the auto complete text view
+     */
     public void updateViews() {
 
         aSwitch.setChecked(bWeek);

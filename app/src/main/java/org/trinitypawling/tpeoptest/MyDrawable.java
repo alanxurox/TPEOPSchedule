@@ -8,6 +8,9 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+/**
+ * This is a Drawable class that, when instantiated, draws the period schedule.
+ */
 public class MyDrawable extends Drawable {
     @Override
     public void draw(@NonNull Canvas canvas) {

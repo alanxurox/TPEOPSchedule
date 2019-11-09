@@ -6,11 +6,13 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-
+/**
+ * The Period class adapted from Jay's work, with additional methods as commented
+ */
 public class Period {
     static int lastTicks;
     static boolean isAWeek;
-    private static ArrayList<Period> periods = new ArrayList<>();
+    static ArrayList<Period> periods;
     private static Course course;
     WTime start;
     WTime end;
@@ -45,27 +47,36 @@ public class Period {
         teacher = "";
     }
 
+    /**
+     * Method loops through the periods and courses, if found two same subjects, show on the schedule page
+     */
     public static void loadCourses() {
-        for (Period p : periods) {
-            for (String s : SettingsActivity.schedule) {
-                try {
-                    course = Course.find(s);
-                    if (Integer.parseInt(p.getPeriod()) == course.getPeriod()) {
-                        p.setSubject(course.getName());
-                        p.setTeacher(course.getTeacher());
-                        p.setRoom(course.getClassRoom());
-                    }
-                } catch (NullPointerException e) {
-                    Log.i("info", "didn't find a course: perhaps the course list in settings is empty or course info not in the database?");
-                } catch (NumberFormatException e) {
-                    Log.i("info", "this is a " + p.getPeriod() + " period");
-                }
+        try {
+            for (Period p : periods) {
+                for (String s : SettingsActivity.schedule) {
 
+                    //A method that finds a course with the teacher, name, and period
+                    course = Course.find(s);
+                    try {
+                        if (Integer.parseInt(p.getPeriod()) == course.getPeriod()) {
+                            p.setSubject(course.getName());
+                            p.setTeacher(course.getTeacher());
+                            p.setRoom(course.getClassRoom());
+                        }
+                    } catch (NumberFormatException e) {
+                        Log.i("info", "this is a lunch/flex/practicum block");
+                    }
+                }
             }
+        } catch (NullPointerException e) {
+            Log.i("info", "didn't find a course: perhaps the course list in settings is empty or course info not in the database?");
         }
     }
 
 
+    /**
+     * Method to load the a week times and period numbers.
+     */
     public static void loadPeriodsA() {
         periods.clear();
         Log.i("info", "load a");
@@ -112,6 +123,7 @@ public class Period {
         periods.add(new Period(new WTime(5, 13, 20), 45, "7"));
         periods.add(new Period(new WTime(5, 14, 10), 45, "4"));
 
+        //After setting the period, load the courses to show the teacher, subject, and period
         loadCourses();
     }
 
@@ -120,10 +132,12 @@ public class Period {
         return isAWeek;
     }
 
-    // TODO: 2019/10/15 finish b week hardcode
+    /**
+     * Method to load the b week times and period numbers.
+     */
     public static void loadPeriodsB() {
         periods.clear();
-        Log.i("info", "load b");
+
         //Monday
         periods.add(new Period(new WTime(1, 8, 20), 70, "1"));
         periods.add(new Period(new WTime(1, 9, 35), 45, "2"));
@@ -173,6 +187,7 @@ public class Period {
         periods.add(new Period(new WTime(6, 10, 10), 45, "7"));
         periods.add(new Period(new WTime(6, 11, 00), 45, "5"));
 
+        //After setting the period, load the courses to show the teacher, subject, and period
         loadCourses();
     }
 
@@ -361,6 +376,11 @@ public class Period {
         period = g;
     }
 
+    /**
+     * Method adapted from javafx, added drawText for teachers, names, and periods
+     *
+     * @param c
+     */
     public void draw(Canvas c) {
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
@@ -377,8 +397,14 @@ public class Period {
         c.drawText(end.getHourAMPM() + ":" + end.getMinuteS(), 150 * (dayOfWeek - 1) + 209, ce - 10, paint);
         c.drawText(subject, 150 * (dayOfWeek - 1) + 140, (ce - cs) / 3 + cs, paint);
         c.drawText(getPeriod(), 150 * (dayOfWeek - 1) + 140, (ce + cs) / 2, paint);
+        c.drawText(getTeacher(), 150 * (dayOfWeek - 1) + 105, ((ce - cs) / 3 + 75) + cs, paint);
     }
 
+    /**
+     * Method adapted from javafx, added drawText for teachers, names, and periods
+     *
+     * @param c
+     */
     public void drawThis(Canvas c) {
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);

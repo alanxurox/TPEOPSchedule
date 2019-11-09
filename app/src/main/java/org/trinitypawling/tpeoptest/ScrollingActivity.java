@@ -12,6 +12,9 @@ import androidx.appcompat.widget.Toolbar;
 public class ScrollingActivity extends AppCompatActivity {
 
     @Override
+    /**
+     * This activity is the week activity that shows all the classes
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(new MyView(this));
@@ -30,7 +33,11 @@ public class ScrollingActivity extends AppCompatActivity {
 
         }
 
-
+        /**
+         * On instantiating the object, on draw is called
+         *
+         * @param canvas
+         */
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             SettingsActivity settingsActivity = new SettingsActivity();
