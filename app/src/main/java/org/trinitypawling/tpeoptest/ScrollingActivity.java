@@ -14,7 +14,10 @@ public class ScrollingActivity extends AppCompatActivity {
     @Override
     /**
      * This activity is the week activity that shows all the classes
+     * with a inner class that draws the periods
+     * Alan
      */
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(new MyView(this));
@@ -23,6 +26,10 @@ public class ScrollingActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * An inner class MyView that calls the onDraw method to draw on Canvas
+     * Alan Xu
+     */
 
     private class MyView extends View {
         public MyView(ScrollingActivity scrollingActivity) {
@@ -38,6 +45,7 @@ public class ScrollingActivity extends AppCompatActivity {
          *
          * @param canvas
          */
+
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             SettingsActivity settingsActivity = new SettingsActivity();
@@ -49,6 +57,9 @@ public class ScrollingActivity extends AppCompatActivity {
             paint.setStrokeWidth(2);
             paint.setColor(Color.WHITE);
             canvas.drawPaint(paint);
+
+            ////Week's periods are drawn
+
             Period.drawAllPeriods(canvas);
 
         }

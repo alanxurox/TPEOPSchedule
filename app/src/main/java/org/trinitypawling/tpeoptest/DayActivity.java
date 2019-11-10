@@ -10,8 +10,10 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
- * This Activity draws today's schedule only
+ * This Activity draws today's schedule only with a MyView class
+ * Alan Xu
  */
+
 public class DayActivity extends AppCompatActivity {
 
     @Override
@@ -19,6 +21,11 @@ public class DayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(new MyView(this));
     }
+
+    /**
+     * A inner MyView class that draws on Canvas
+     * Alan Xu
+     */
 
     private class MyView extends View {
         public MyView(Context context) {
@@ -30,6 +37,7 @@ public class DayActivity extends AppCompatActivity {
          *
          * @param canvas
          */
+
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             int x = getWidth();
@@ -40,6 +48,9 @@ public class DayActivity extends AppCompatActivity {
             paint.setStrokeWidth(2);
             paint.setColor(Color.WHITE);
             canvas.drawPaint(paint);
+
+            //Today's periods are drawn
+
             Period.drawTodayPeriods(canvas);
 
         }

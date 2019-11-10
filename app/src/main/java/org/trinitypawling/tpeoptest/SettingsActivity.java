@@ -18,7 +18,10 @@ import java.util.ArrayList;
 
 /**
  * Settings Activity for user to set their own courses and switch between a and b week
+ *
+ * Alan Xu
  */
+
 public class SettingsActivity extends AppCompatActivity {
 
     public static final String SHARED_PREFS = "sharedPrefs";
@@ -29,6 +32,13 @@ public class SettingsActivity extends AppCompatActivity {
     Switch aSwitch;
     boolean bWeek;
 
+    /**
+     * Method called as the activity is created, used for initializing objects
+     * and setting up for the autocompletetextview to grab data from the Firebase database
+     *
+     * @param savedInstanceState
+     */
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
@@ -38,13 +48,18 @@ public class SettingsActivity extends AppCompatActivity {
         aSwitch = findViewById(R.id.switchB);
 
         //load and update data stored in shared preferences
+
         loadData();
         updateViews();
 
         //Loops through the auto complete text views, and set the according subjects to the correct periods
+
         for (int i = 1; i <= 7; i++) {
             String viewID = "tv" + i;
             int rID = getResources().getIdentifier(viewID, "id", getPackageName());
+
+            //Get the arraylist from the Course class
+
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, Course.getNameList(i));
 
@@ -61,14 +76,19 @@ public class SettingsActivity extends AppCompatActivity {
     /**
      * On exit, this method stores the data, loads the periods into the graphics
      */
+
     protected void onDestroy() {
         super.onDestroy();
         schedule.clear();
+
+        //Iterates through the autocompletetextviews with string tv + i, which is the id of the text views
 
         for (int i = 1; i <= 7; i++) {
             String viewID = "tv" + i;
             int rID = getResources().getIdentifier(viewID, "id", getPackageName());
             AutoCompleteTextView editText = findViewById(rID);
+
+            //add to the schedule array list
 
             schedule.add(editText.getText().toString());
         }
@@ -86,16 +106,19 @@ public class SettingsActivity extends AppCompatActivity {
     /**
      * Method store data using Google GSON and sharedPreferences
      */
+
     public void saveData() {
 //        sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 //        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         //Utilize a google library that converts array list into json format for storage
+
         Gson gson = new Gson();
         String json = gson.toJson(schedule);
 
         //put in the converted json arraylist and bool into the stored preference
+
         editor.putString(COURSES, json);
         editor.putBoolean(SWITCH, aSwitch.isChecked());
         editor.commit();
@@ -105,6 +128,7 @@ public class SettingsActivity extends AppCompatActivity {
     /**
      * Method load data on start
      */
+
     public void loadData() {
 //        sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 //        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -112,11 +136,12 @@ public class SettingsActivity extends AppCompatActivity {
         String json = sharedPreferences.getString(COURSES, null);
 
         //To load the arraylist, a type token that specifies the array list is needed
+
         Type type = new TypeToken<ArrayList<String>>() {
         }.getType();
         schedule = gson.fromJson(json, type);
 
-        //
+        //Avoid null references
         if (schedule == null)
             schedule = new ArrayList<>();
         bWeek = sharedPreferences.getBoolean(SWITCH, false);
@@ -126,6 +151,7 @@ public class SettingsActivity extends AppCompatActivity {
     /**
      * Method set the correct week boolean and the auto complete text view
      */
+
     public void updateViews() {
 
         aSwitch.setChecked(bWeek);
@@ -145,6 +171,12 @@ public class SettingsActivity extends AppCompatActivity {
 
         }
     }
+
+
+    /**
+     * Method called on the startup of the activity,
+     * set a listener for whenever the switch is clicked
+     */
 
     @Override
     protected void onStart() {

@@ -22,6 +22,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Main class that creates intent, connects all other activities, and initialize the application with
+ * the setup needed
+ * <p>
+ * Alan Xu
+ */
 public class MainActivity extends AppCompatActivity {
 
     public static final String SWITCH = "switch";
@@ -66,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Method to check the boolean and load periods accordingly
      */
+
     public void updateViews() {
         if (Period.AWeek())
             Period.loadPeriodsA();
@@ -76,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * SharedPreference method to load the data stored in settings activity
      */
+
     public void loadData() {
 
         Period.isAWeek = sharedPreferences.getBoolean(SWITCH, false);
@@ -112,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
          * the Firebase Database DataSnapshot whenever data changes.
          * To avoid duplicates, the size is set to 22, the amount of courses in the databse.
          */
+
         if (COURSES_List.size() < 22) {
             courseRef.addValueEventListener(new ValueEventListener() {
 
@@ -157,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param view
      */
+
     public void onClickSettings(View view) {
         startActivity(settings);
     }
@@ -166,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param view
      */
+
     public void onClickWeek(View view) {
         startActivity(week);
     }
@@ -174,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
      * Start day activity intent
      * @param view
      */
+
     public void onClickDay(View view) {
         startActivity(day);
     }
