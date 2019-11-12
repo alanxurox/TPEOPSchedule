@@ -71,13 +71,36 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+    public void onCommit(View view) {
+        schedule.clear();
 
-    @Override
+        //Iterates through the autocompletetextviews with string tv + i, which is the id of the text views
+
+        for (int i = 1; i <= 7; i++) {
+            String viewID = "tv" + i;
+            int rID = getResources().getIdentifier(viewID, "id", getPackageName());
+            AutoCompleteTextView editText = findViewById(rID);
+
+            //add to the schedule array list
+
+            schedule.add(editText.getText().toString());
+        }
+
+        if (aSwitch.isChecked())
+            Period.loadPeriodsB();
+        else
+            Period.loadPeriodsA();
+
+
+        saveData();
+    }
+
+
     /**
      * On exit, this method stores the data, loads the periods into the graphics
      */
 
-    protected void onDestroy() {
+   /* protected void onDestroy() {
         super.onDestroy();
         schedule.clear();
 
@@ -101,7 +124,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         saveData();
 
-    }
+    }*/
 
     /**
      * Method store data using Google GSON and sharedPreferences

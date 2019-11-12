@@ -4,7 +4,17 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * The Period class adapted from Jay's work, with additional methods as commented
@@ -18,6 +28,11 @@ public class Period {
     WTime end;
     String period;
     String teacher, room, subject;
+    final static List<Period> PERIOD_LIST = new ArrayList<>();
+
+    static DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+    static DatabaseReference periodARef = rootRef.child("PeriodA");
+    static DatabaseReference periodBRef = rootRef.child("PeriodB");
 
 
     public Period(WTime start, int periodLength, String period) {
@@ -54,7 +69,7 @@ public class Period {
         try {
             for (Period p : periods) {
                 for (String s : SettingsActivity.schedule) {
-
+                    Log.i("info77", p.toString() + " " + s);
                     //A method that finds a course with the teacher, name, and period
                     course = Course.find(s);
                     try {
@@ -79,8 +94,42 @@ public class Period {
      */
     public static void loadPeriodsA() {
         periods.clear();
+        PERIOD_LIST.clear();
         Log.i("info", "load a");
-        //Monday
+
+        if (periods.size() < 33) {
+            periodARef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot periodSnapshot : dataSnapshot.getChildren()) {
+                        periods.add(new Period(new WTime(1, 8, 20), 70, "1"));
+                        //Retrieve data and add to course
+                        PERIOD_LIST.add(new Period(new WTime(
+
+                                Integer.parseInt(periodSnapshot.child("day").getValue(String.class)),
+
+                                Integer.parseInt(periodSnapshot.child("Hour").getValue(String.class)),
+
+                                Integer.parseInt(periodSnapshot.child("Min").getValue(String.class))),
+
+                                Integer.parseInt(periodSnapshot.child("Len").getValue(String.class)),
+
+                                periodSnapshot.child("period").getValue(String.class))
+                        );
+                    }
+
+                    //After setting the period, load the courses to show the teacher, subject, and period
+                    loadCourses();
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+        /*//Monday
         periods.add(new Period(new WTime(1, 8, 20), 70, "1"));
         periods.add(new Period(new WTime(1, 9, 35), 45, "2"));
         periods.add(new Period(new WTime(1, 10, 25), 70, "3"));
@@ -121,14 +170,11 @@ public class Period {
         periods.add(new Period(new WTime(5, 11, 45), 25, "Lunch"));
         periods.add(new Period(new WTime(5, 12, 30), 45, "6"));
         periods.add(new Period(new WTime(5, 13, 20), 45, "7"));
-        periods.add(new Period(new WTime(5, 14, 10), 45, "4"));
-
-        //After setting the period, load the courses to show the teacher, subject, and period
-        loadCourses();
+        periods.add(new Period(new WTime(5, 14, 10), 45, "4"));*/
     }
 
     public static boolean AWeek() {
-        isAWeek = periods.size() < 34;
+        isAWeek = periods.size() < 33;
         return isAWeek;
     }
 

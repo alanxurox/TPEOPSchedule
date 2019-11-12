@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference courseRef = rootRef.child("Course");
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -52,19 +53,14 @@ public class MainActivity extends AppCompatActivity {
         Attempted to get the SharedPreferences reference, tried both two, didn't work.
          */
         sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        Log.i("info", "" + sharedPreferences);
-        Log.i("info", "" + sharedPreferences.getAll());
 
         Period.periods = new ArrayList<>();
-        //Attempted to read and load from SharedPreference
-        loadData();
-        updateViews();
 
         //Instantiate Drawable canvas to draw
-        MyDrawable myDrawable = new MyDrawable();
+        /*MyDrawable myDrawable = new MyDrawable();
         ImageView imageView = findViewById(R.id.imageView);
         imageView.setImageDrawable(myDrawable);
-        imageView.setContentDescription("a");
+        imageView.setContentDescription("a");*/
 
 
     }
@@ -105,10 +101,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        MyDrawable myDrawable = new MyDrawable();
-        ImageView imageView = findViewById(R.id.imageView);
-        imageView.setImageDrawable(myDrawable);
-        imageView.setContentDescription("a");
+
 
         //Initialize the intent to go through the activities
         settings = new Intent(MainActivity.this, SettingsActivity.class);
@@ -149,12 +142,23 @@ public class MainActivity extends AppCompatActivity {
                         );
                     }
                     Course.setCourses(COURSES_List);
+
+                    loadData();
+                    updateViews();
+
+                    //TODO fix bug firebase runs before this. In period class onDataChange cannot static findviewbyid
+                    MyDrawable myDrawable = new MyDrawable();
+                    ImageView imageView = findViewById(R.id.imageView);
+                    imageView.setImageDrawable(myDrawable);
+                    imageView.setContentDescription("a");
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
+
+
             });
         }
 
