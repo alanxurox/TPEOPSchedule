@@ -25,6 +25,8 @@ public class MyDrawable extends Drawable {
 
     }
 
+
+
     /*
     All default methods that comes with the Drawable interface below
      */

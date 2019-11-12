@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -24,6 +25,7 @@ public class Period {
     static boolean isAWeek;
     static ArrayList<Period> periods;
     private static Course course;
+    private static FireBaseCallback fireBaseCallback;
     WTime start;
     WTime end;
     String period;
@@ -92,6 +94,67 @@ public class Period {
     /**
      * Method to load the a week times and period numbers.
      */
+    public static void loadPeriodsA(final FireBaseCallback fireBaseCallback) {
+        periods.clear();
+        PERIOD_LIST.clear();
+        Log.i("info", "load a");
+
+        if (periods.size() < 33) {
+            periodARef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot periodSnapshot : dataSnapshot.getChildren()) {
+                        try {
+                            //Retrieve data and add to course
+
+                            PERIOD_LIST.add(new Period(new WTime(
+
+                                    periodSnapshot.child("day").getValue(Long.class).intValue(),
+
+                                    periodSnapshot.child("Hour").getValue(Long.class).intValue(),
+
+                                    periodSnapshot.child("Min").getValue(Long.class).intValue()),
+
+                                    periodSnapshot.child("Len").getValue(Long.class).intValue(),
+
+                                    String.valueOf(periodSnapshot.child("period").getValue(Long.class)))
+                            );
+                        } catch (DatabaseException e) {
+                            Log.i("info", "Lunch!");
+
+                            PERIOD_LIST.add(new Period(new WTime(
+
+                                    periodSnapshot.child("day").getValue(Long.class).intValue(),
+
+                                    periodSnapshot.child("Hour").getValue(Long.class).intValue(),
+
+                                    periodSnapshot.child("Min").getValue(Long.class).intValue()),
+
+                                    periodSnapshot.child("Len").getValue(Long.class).intValue(),
+
+                                    periodSnapshot.child("period").getValue(String.class))
+                            );
+                        }
+                    }
+
+                    for (Period p : PERIOD_LIST) {
+                        periods.add(p);
+                    }
+
+                    //After setting the period, load the courses to show the teacher, subject, and period
+                    loadCourses();
+
+                    fireBaseCallback.onCallBack(periods);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
     public static void loadPeriodsA() {
         periods.clear();
         PERIOD_LIST.clear();
@@ -102,23 +165,44 @@ public class Period {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot periodSnapshot : dataSnapshot.getChildren()) {
-                        periods.add(new Period(new WTime(1, 8, 20), 70, "1"));
-                        //Retrieve data and add to course
-                        PERIOD_LIST.add(new Period(new WTime(
+                        try {
+                            //Retrieve data and add to course
 
-                                Integer.parseInt(periodSnapshot.child("day").getValue(String.class)),
+                            PERIOD_LIST.add(new Period(new WTime(
 
-                                Integer.parseInt(periodSnapshot.child("Hour").getValue(String.class)),
+                                    periodSnapshot.child("day").getValue(Long.class).intValue(),
 
-                                Integer.parseInt(periodSnapshot.child("Min").getValue(String.class))),
+                                    periodSnapshot.child("Hour").getValue(Long.class).intValue(),
 
-                                Integer.parseInt(periodSnapshot.child("Len").getValue(String.class)),
+                                    periodSnapshot.child("Min").getValue(Long.class).intValue()),
 
-                                periodSnapshot.child("period").getValue(String.class))
-                        );
+                                    periodSnapshot.child("Len").getValue(Long.class).intValue(),
+
+                                    String.valueOf(periodSnapshot.child("period").getValue(Long.class)))
+                            );
+                        } catch (DatabaseException e) {
+                            Log.i("info", "Lunch!");
+
+                            PERIOD_LIST.add(new Period(new WTime(
+
+                                    periodSnapshot.child("day").getValue(Long.class).intValue(),
+
+                                    periodSnapshot.child("Hour").getValue(Long.class).intValue(),
+
+                                    periodSnapshot.child("Min").getValue(Long.class).intValue()),
+
+                                    periodSnapshot.child("Len").getValue(Long.class).intValue(),
+
+                                    periodSnapshot.child("period").getValue(String.class))
+                            );
+                        }
                     }
 
                     //After setting the period, load the courses to show the teacher, subject, and period
+                    for (Period p : PERIOD_LIST) {
+                        periods.add(p);
+                    }
+
                     loadCourses();
 
                 }
@@ -129,48 +213,6 @@ public class Period {
                 }
             });
         }
-        /*//Monday
-        periods.add(new Period(new WTime(1, 8, 20), 70, "1"));
-        periods.add(new Period(new WTime(1, 9, 35), 45, "2"));
-        periods.add(new Period(new WTime(1, 10, 25), 70, "3"));
-        periods.add(new Period(new WTime(1, 11, 45), 25, "Lunch"));
-        periods.add(new Period(new WTime(1, 12, 30), 45, "4"));
-        periods.add(new Period(new WTime(1, 13, 20), 45, "5"));
-        periods.add(new Period(new WTime(1, 14, 10), 45, "6"));
-
-        //Tuesday
-        periods.add(new Period(new WTime(2, 8, 20), 70, "7"));
-        periods.add(new Period(new WTime(2, 9, 35), 45, "4"));
-        periods.add(new Period(new WTime(2, 10, 25), 70, "2"));
-        periods.add(new Period(new WTime(2, 11, 45), 25, "Lunch"));
-        periods.add(new Period(new WTime(2, 12, 30), 45, "5"));
-        periods.add(new Period(new WTime(2, 13, 20), 45, "1"));
-        periods.add(new Period(new WTime(2, 14, 10), 45, "3"));
-
-        //Wednesday
-        periods.add(new Period(new WTime(3, 8, 20), 45, "5"));
-        periods.add(new Period(new WTime(3, 9, 10), 45, "6"));
-        periods.add(new Period(new WTime(3, 10, 00), 45, "1"));
-        periods.add(new Period(new WTime(3, 10, 50), 45, "7"));
-
-        //Thursday
-        periods.add(new Period(new WTime(4, 8, 20), 70, "4"));
-        periods.add(new Period(new WTime(4, 9, 35), 45, "7"));
-        periods.add(new Period(new WTime(4, 10, 25), 70, "6"));
-        periods.add(new Period(new WTime(4, 11, 45), 25, "Lunch"));
-        periods.add(new Period(new WTime(4, 12, 30), 45, "2"));
-        periods.add(new Period(new WTime(4, 13, 20), 45, "3"));
-        periods.add(new Period(new WTime(4, 14, 10), 45, "1"));
-
-        //Friday
-        periods.add(new Period(new WTime(5, 8, 00), 45, "3"));
-        periods.add(new Period(new WTime(5, 8, 50), 45, "2"));
-        periods.add(new Period(new WTime(5, 9, 40), 70, "5"));
-        periods.add(new Period(new WTime(5, 11, 00), 40, "Chapel"));
-        periods.add(new Period(new WTime(5, 11, 45), 25, "Lunch"));
-        periods.add(new Period(new WTime(5, 12, 30), 45, "6"));
-        periods.add(new Period(new WTime(5, 13, 20), 45, "7"));
-        periods.add(new Period(new WTime(5, 14, 10), 45, "4"));*/
     }
 
     public static boolean AWeek() {
@@ -181,57 +223,150 @@ public class Period {
     /**
      * Method to load the b week times and period numbers.
      */
+
+    public static void loadPeriodsB(final FireBaseCallback fireBaseCallback) {
+        periods.clear();
+        PERIOD_LIST.clear();
+        Log.i("info", "load b");
+
+        if (periods.size() < 37) {
+            periodARef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot periodSnapshot : dataSnapshot.getChildren()) {
+                        try {
+                            //Retrieve data and add to course
+
+                            PERIOD_LIST.add(new Period(new WTime(
+
+                                    periodSnapshot.child("day").getValue(Long.class).intValue(),
+
+                                    periodSnapshot.child("Hour").getValue(Long.class).intValue(),
+
+                                    periodSnapshot.child("Min").getValue(Long.class).intValue()),
+
+                                    periodSnapshot.child("Len").getValue(Long.class).intValue(),
+
+                                    String.valueOf(periodSnapshot.child("period").getValue(Long.class)))
+                            );
+                        } catch (DatabaseException e) {
+                            String s;
+                            Log.i("info", "Lunch/practicum/flex!");
+                            switch (periodSnapshot.child("period").getValue(String.class)) {
+                                case "Extra Help":
+                                    s = "Practicum";
+                                    break;
+                                case "Lunch":
+                                    s = "Lunch";
+                                    break;
+                                case "Flex Block":
+                                    s = "Flex Block";
+                                default:
+                                    s = "";
+                            }
+                            PERIOD_LIST.add(new Period(new WTime(
+
+                                    periodSnapshot.child("day").getValue(Long.class).intValue(),
+
+                                    periodSnapshot.child("Hour").getValue(Long.class).intValue(),
+
+                                    periodSnapshot.child("Min").getValue(Long.class).intValue()),
+
+                                    periodSnapshot.child("Len").getValue(Long.class).intValue(),
+
+                                    s)
+                            );
+                        }
+                    }
+
+                    for (Period p : PERIOD_LIST) {
+                        periods.add(p);
+                    }
+
+                    //After setting the period, load the courses to show the teacher, subject, and period
+                    loadCourses();
+
+                    fireBaseCallback.onCallBack(periods);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
     public static void loadPeriodsB() {
         periods.clear();
+        PERIOD_LIST.clear();
 
-        //Monday
-        periods.add(new Period(new WTime(1, 8, 20), 70, "1"));
-        periods.add(new Period(new WTime(1, 9, 35), 45, "2"));
-        periods.add(new Period(new WTime(1, 10, 25), 70, "3"));
-        periods.add(new Period(new WTime(1, 11, 45), 25, "Lunch"));
-        periods.add(new Period(new WTime(1, 12, 30), 45, "Practicum"));
-        periods.add(new Period(new WTime(1, 13, 20), 45, "4"));
-        periods.add(new Period(new WTime(1, 14, 10), 45, "6"));
+        if (periods.size() < 37) {
+            periodBRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot periodSnapshot : dataSnapshot.getChildren()) {
+                        try {
+                            //Retrieve data and add to course
 
-        //Tuesday
-        periods.add(new Period(new WTime(2, 8, 20), 70, "7"));
-        periods.add(new Period(new WTime(2, 9, 35), 45, "4"));
-        periods.add(new Period(new WTime(2, 10, 25), 70, "2"));
-        periods.add(new Period(new WTime(2, 11, 45), 25, "Lunch"));
-        periods.add(new Period(new WTime(2, 12, 30), 45, "Practicum"));
-        periods.add(new Period(new WTime(2, 13, 20), 45, "5"));
-        periods.add(new Period(new WTime(2, 14, 10), 45, "3"));
+                            PERIOD_LIST.add(new Period(new WTime(
 
-        //Wednesday
-        periods.add(new Period(new WTime(3, 8, 00), 55, "Flex Block"));
-        periods.add(new Period(new WTime(3, 9, 00), 45, "5"));
-        periods.add(new Period(new WTime(3, 9, 50), 45, "6"));
-        periods.add(new Period(new WTime(3, 10, 40), 45, "1"));
+                                    periodSnapshot.child("day").getValue(Long.class).intValue(),
 
-        //Thursday
-        periods.add(new Period(new WTime(4, 8, 20), 70, "4"));
-        periods.add(new Period(new WTime(4, 9, 35), 45, "7"));
-        periods.add(new Period(new WTime(4, 10, 25), 70, "6"));
-        periods.add(new Period(new WTime(4, 11, 45), 25, "Lunch"));
-        periods.add(new Period(new WTime(4, 12, 30), 45, "2"));
-        periods.add(new Period(new WTime(4, 13, 20), 45, "3"));
-        periods.add(new Period(new WTime(4, 14, 10), 45, "1"));
+                                    periodSnapshot.child("Hour").getValue(Long.class).intValue(),
 
-        //Friday
-        periods.add(new Period(new WTime(5, 8, 00), 45, "3"));
-        periods.add(new Period(new WTime(5, 8, 50), 45, "2"));
-        periods.add(new Period(new WTime(5, 9, 40), 70, "5"));
-        periods.add(new Period(new WTime(5, 11, 00), 40, "Chapel"));
-        periods.add(new Period(new WTime(5, 11, 45), 25, "Lunch"));
-        periods.add(new Period(new WTime(5, 12, 30), 45, "Practicum"));
-        periods.add(new Period(new WTime(5, 13, 20), 45, "7"));
-        periods.add(new Period(new WTime(5, 14, 10), 45, "4"));
+                                    periodSnapshot.child("Min").getValue(Long.class).intValue()),
 
-        //Saturday
-        periods.add(new Period(new WTime(6, 8, 30), 45, "6"));
-        periods.add(new Period(new WTime(6, 9, 20), 45, "1"));
-        periods.add(new Period(new WTime(6, 10, 10), 45, "7"));
-        periods.add(new Period(new WTime(6, 11, 00), 45, "5"));
+                                    periodSnapshot.child("Len").getValue(Long.class).intValue(),
+
+                                    String.valueOf(periodSnapshot.child("period").getValue(Long.class)))
+                            );
+                        } catch (DatabaseException e) {
+                            String s;
+                            Log.i("info", "Lunch/practicum/flex!");
+                            switch (periodSnapshot.child("period").getValue(String.class)) {
+                                case "Extra Help":
+                                    s = "Practicum";
+                                    break;
+                                case "Lunch":
+                                    s = "Lunch";
+                                    break;
+                                case "Flex Block":
+                                    s = "Flex Block";
+                                default:
+                                    s = "";
+                            }
+                            PERIOD_LIST.add(new Period(new WTime(
+
+                                    periodSnapshot.child("day").getValue(Long.class).intValue(),
+
+                                    periodSnapshot.child("Hour").getValue(Long.class).intValue(),
+
+                                    periodSnapshot.child("Min").getValue(Long.class).intValue()),
+
+                                    periodSnapshot.child("Len").getValue(Long.class).intValue(),
+
+                                    s)
+                            );
+                        }
+                    }
+
+                    //After setting the period, load the courses to show the teacher, subject, and period
+                    for (Period p : PERIOD_LIST) {
+                        periods.add(p);
+                    }
+
+                    loadCourses();
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
 
         //After setting the period, load the courses to show the teacher, subject, and period
         loadCourses();

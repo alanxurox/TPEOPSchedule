@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference courseRef = rootRef.child("Course");
+    static MyDrawable myDrawable;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +72,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateViews() {
         if (Period.AWeek())
-            Period.loadPeriodsA();
+            Period.loadPeriodsA(new FireBaseCallback() {
+                @Override
+                public void onCallBack(List<?> list) {
+                    myDrawable = new MyDrawable();
+                    ImageView imageView = findViewById(R.id.imageView);
+                    imageView.setImageDrawable(myDrawable);
+                    imageView.setContentDescription("a");
+                }
+            });
         else
-            Period.loadPeriodsB();
+            Period.loadPeriodsB(new FireBaseCallback() {
+                @Override
+                public void onCallBack(List<?> list) {
+                    myDrawable = new MyDrawable();
+                    ImageView imageView = findViewById(R.id.imageView);
+                    imageView.setImageDrawable(myDrawable);
+                    imageView.setContentDescription("b");
+                }
+            });
     }
 
     /**
@@ -146,11 +163,9 @@ public class MainActivity extends AppCompatActivity {
                     loadData();
                     updateViews();
 
+
                     //TODO fix bug firebase runs before this. In period class onDataChange cannot static findviewbyid
-                    MyDrawable myDrawable = new MyDrawable();
-                    ImageView imageView = findViewById(R.id.imageView);
-                    imageView.setImageDrawable(myDrawable);
-                    imageView.setContentDescription("a");
+
                 }
 
                 @Override
@@ -161,6 +176,10 @@ public class MainActivity extends AppCompatActivity {
 
             });
         }
+
+    }
+
+    public void onCallback() {
 
     }
 
