@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@color/colorBackground"
+    app:layoutDescription="@xml/collapsing_header_arc"
+    app:showPaths="false"
+    tools:showPaths="true">
 
     <LinearLayout
         android:id="@+id/linear"
@@ -14,13 +17,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/header">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            app:srcCompat="@android:color/background_light" />
+            app:srcCompat="@color/colorBackground" />
 
         <Button
             android:id="@+id/day"
@@ -50,4 +53,50 @@
             android:text="Settings" />
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.github.florent37.shapeofview.shapes.ArcView
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shape_arc_height="26dp"
+        app:shape_arc_position="bottom">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.7"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/gardiblur" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.3"
+            android:background="@drawable/radial" />
+
+    </com.github.florent37.shapeofview.shapes.ArcView>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/headerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|center_horizontal|center_vertical"
+        android:elevation="4dp"
+        android:gravity="center|center_horizontal|center_vertical"
+        android:shadowColor="#3E3E3E"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="4"
+        android:text="Trinity Pawling Schedule"
+        android:textColor="#00274C"
+        android:textSize="30sp"
+        app:fontFamily="@font/vogue"
+        app:layout_constraintBottom_toTopOf="@+id/linear"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/header" />
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

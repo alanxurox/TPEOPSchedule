@@ -2,7 +2,9 @@ package org.trinitypawling.tpeoptest;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.text.TextPaint;
 
 import androidx.annotation.NonNull;
 
@@ -14,6 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -23,6 +26,7 @@ import java.util.List;
 public class Period {
     static int lastTicks;
     static boolean isAWeek;
+    boolean extend;
     static ArrayList<Period> periods;
     private static Course course;
     private static FireBaseCallback fireBaseCallback;
@@ -71,7 +75,6 @@ public class Period {
         try {
             for (Period p : periods) {
                 for (String s : SettingsActivity.schedule) {
-                    Log.i("info77", p.toString() + " " + s);
                     //A method that finds a course with the teacher, name, and period
                     course = Course.find(s);
                     try {
@@ -81,12 +84,10 @@ public class Period {
                             p.setRoom(course.getClassRoom());
                         }
                     } catch (NumberFormatException e) {
-                        Log.i("info", "this is a lunch/flex/practicum block");
                     }
                 }
             }
         } catch (NullPointerException e) {
-            Log.i("info", "didn't find a course: perhaps the course list in settings is empty or course info not in the database?");
         }
     }
 
@@ -97,7 +98,7 @@ public class Period {
     public static void loadPeriodsA(final FireBaseCallback fireBaseCallback) {
         periods.clear();
         PERIOD_LIST.clear();
-        Log.i("info", "load a");
+
 
         if (periods.size() < 33) {
             periodARef.addValueEventListener(new ValueEventListener() {
@@ -120,7 +121,7 @@ public class Period {
                                     String.valueOf(periodSnapshot.child("period").getValue(Long.class)))
                             );
                         } catch (DatabaseException e) {
-                            Log.i("info", "Lunch!");
+
 
                             PERIOD_LIST.add(new Period(new WTime(
 
@@ -158,7 +159,7 @@ public class Period {
     public static void loadPeriodsA() {
         periods.clear();
         PERIOD_LIST.clear();
-        Log.i("info", "load a");
+
 
         if (periods.size() < 33) {
             periodARef.addValueEventListener(new ValueEventListener() {
@@ -181,7 +182,7 @@ public class Period {
                                     String.valueOf(periodSnapshot.child("period").getValue(Long.class)))
                             );
                         } catch (DatabaseException e) {
-                            Log.i("info", "Lunch!");
+
 
                             PERIOD_LIST.add(new Period(new WTime(
 
@@ -227,7 +228,6 @@ public class Period {
     public static void loadPeriodsB(final FireBaseCallback fireBaseCallback) {
         periods.clear();
         PERIOD_LIST.clear();
-        Log.i("info", "load b");
 
         if (periods.size() < 37) {
             periodARef.addValueEventListener(new ValueEventListener() {
@@ -251,7 +251,7 @@ public class Period {
                             );
                         } catch (DatabaseException e) {
                             String s;
-                            Log.i("info", "Lunch/practicum/flex!");
+
                             switch (periodSnapshot.child("period").getValue(String.class)) {
                                 case "Extra Help":
                                     s = "Practicum";
@@ -323,7 +323,7 @@ public class Period {
                             );
                         } catch (DatabaseException e) {
                             String s;
-                            Log.i("info", "Lunch/practicum/flex!");
+
                             switch (periodSnapshot.child("period").getValue(String.class)) {
                                 case "Extra Help":
                                     s = "Practicum";
@@ -557,6 +557,10 @@ public class Period {
         period = g;
     }
 
+    public void setExtend(boolean extend) {
+        this.extend = extend;
+    }
+
     /**
      * Method adapted from javafx, added drawText for teachers, names, and periods
      *
@@ -567,18 +571,64 @@ public class Period {
         paint.setStyle(Paint.Style.STROKE);
         paint.setTextSize(20);
         paint.setStrokeWidth(2);
+        paint.setAntiAlias(true);
 
         int dayOfWeek = start.getDay();
 
-        WTime eight = new WTime(dayOfWeek, 8, 0);
+        WTime eight = new WTime(dayOfWeek, 7, 30);
         int cs = (start.ticks - eight.ticks) / 150;
         int ce = (end.ticks - eight.ticks) / 150;
-        c.drawRect(150 * (dayOfWeek - 1) + 100, cs, 150 * (dayOfWeek - 1) + 250, ce, paint);
+
+        Rect areaRect = new Rect(150 * (dayOfWeek - 1) + 100, cs, 150 * (dayOfWeek - 1) + 250, ce);
+        RectF bounds = new RectF(areaRect);
+
+        c.drawRect(areaRect, paint);
+        drawText(subject, c, areaRect, -40);
+        drawText(period, c, areaRect, -15);
+
         c.drawText(start.getHourAMPM() + ":" + start.getMinuteS(), 150 * (dayOfWeek - 1) + 105, cs + 20, paint);
-        c.drawText(end.getHourAMPM() + ":" + end.getMinuteS(), 150 * (dayOfWeek - 1) + 209, ce - 10, paint);
-        c.drawText(subject, 150 * (dayOfWeek - 1) + 140, (ce - cs) / 3 + cs, paint);
-        c.drawText(getPeriod(), 150 * (dayOfWeek - 1) + 140, (ce + cs) / 2, paint);
-        c.drawText(getTeacher(), 150 * (dayOfWeek - 1) + 105, ((ce - cs) / 3 + 75) + cs, paint);
+        drawText(teacher, c, areaRect, 12);
+        c.drawText(end.getHourAMPM() + ":" + end.getMinuteS(), end.getHourAMPM() > 9 ?
+                150 * (dayOfWeek - 1) + 194 : 150 * (dayOfWeek - 1) + 203, ce - 8, paint);
+
+//        c.drawText(getPeriod(), 180 * (dayOfWeek - 1) + 140, (ce + cs) / 2, paint);
+//        c.drawText(getTeacher(), 180 * (dayOfWeek - 1) + 105, ((ce - cs) / 3 + 75) + cs, paint);
+    }
+
+    public void drawText(String text, Canvas c, Rect areaRect, int offset) {
+        RectF bounds = new RectF(areaRect);
+        TextPaint paint = new TextPaint();
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setTextSize(20);
+        paint.setStrokeWidth(2);
+        paint.setAntiAlias(true);
+        c.drawRect(areaRect, paint);
+        if (extend) offset += 25;
+        if (text.length() > 11 && text.split(" ", 3).length > 1) {
+            String[] temp = text.split(" ", 3);
+            String[] strings = temp;
+            if (temp[0].length() < 10) {
+                setExtend(true);
+                strings = Arrays.copyOfRange(temp, 1, temp.length);
+                strings[0] = temp[0] + " " + strings[0];
+            } else setExtend(false);
+            for (String s : strings) {
+                bounds = new RectF(areaRect);
+                bounds.right = paint.measureText(s, 0, s.length());
+                bounds.bottom = paint.descent() - paint.ascent();
+                bounds.left += (areaRect.width() - bounds.right) / 2.0f;
+                bounds.top += (areaRect.height() - bounds.bottom) / 2.0f;
+
+                c.drawText(s, bounds.left, bounds.top - paint.ascent() + offset, paint);
+                offset += paint.descent() - paint.ascent();
+            }
+        } else {
+            bounds.right = paint.measureText(text, 0, text.length());
+            bounds.bottom = paint.descent() - paint.ascent();
+            bounds.left += (areaRect.width() - bounds.right) / 2.0f;
+            bounds.top += (areaRect.height() - bounds.bottom) / 2.0f;
+            c.drawText(text, bounds.left, bounds.top - paint.ascent() + offset, paint);
+        }
     }
 
     /**
@@ -586,6 +636,7 @@ public class Period {
      *
      * @param c
      */
+
     public void drawThis(Canvas c) {
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
@@ -597,7 +648,7 @@ public class Period {
         int cs = (start.ticks - start.ticks) / 150;
         int ce = (end.ticks - start.ticks) / 150;
         setLastTicks(start.ticks);
-        Log.i("aaaa", "start.ticks = " + start.ticks);
+
         c.drawRect(0, cs, 150, ce, paint);
         c.drawText(start.getHourAMPM() + ":" + start.getMinuteS(), 5, cs + 20, paint);
         c.drawText(end.getHourAMPM() + ":" + end.getMinuteS(), 109, ce - 10, paint);
@@ -614,9 +665,7 @@ public class Period {
         WTime current = new WTime();
         int cs = (start.ticks - getLastTicks()) / 150;
         int ce = (end.ticks - getLastTicks()) / 150;
-        Log.i("aaaa", "cs next: " + cs);
-        Log.i("aaaa", "ce next: " + ce);
-        Log.i("aaaa", "" + getLastTicks());
+
 
         c.drawRect(0, cs, 150, ce, paint);
         c.drawText(start.getHourAMPM() + ":" + start.getMinuteS(), 5, cs + 20, paint);

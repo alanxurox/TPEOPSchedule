@@ -3,7 +3,6 @@ package org.trinitypawling.tpeoptest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -139,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
                     //Log.i("info", "onDataChange is running" + dataSnapshot.getValue().toString());
                     //Iterable<DataSnapshot> children = dataSnapshot.getChildren();
 
-                    Log.i("info", "onDataChange is running");
                     for (DataSnapshot courseSnapshot : dataSnapshot.getChildren()) {
 
                         //Retrieve data and add to course

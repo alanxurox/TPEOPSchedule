@@ -32,6 +32,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.2.0'
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     implementation 'com.google.firebase:firebase-database:19.2.0'
+    implementation 'com.github.florent37:shapeofview:1.4.6'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
 }
 
 apply plugin: 'com.google.gms.google-services'
