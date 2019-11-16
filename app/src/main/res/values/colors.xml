@@ -5,5 +5,7 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="colorBackground">#fcfcf5</color>
+    <color name="trans">#80000000</color>
+    <color name="tp_gold">#ffcb05</color>
 
 </resources>

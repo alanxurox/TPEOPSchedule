@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="@drawable/logo_bg"
     app:layoutDescription="@xml/collapsing_header_arc"
     app:showPaths="false"
     tools:showPaths="true">
@@ -21,42 +21,57 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="300dp"
-            app:srcCompat="@color/colorBackground" />
+            android:padding="10sp"
+            app:srcCompat="@color/trans" />
 
         <Button
             android:id="@+id/day"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/tp_button"
+            android:fontFamily="@font/vogue"
             android:onClick="onClickDay"
-            android:text="Day" />
+            android:padding="2sp"
+            android:paddingTop="2sp"
+            android:paddingBottom="2sp"
+            android:text="Day"
+
+            android:textColor="@color/colorBackground" />
 
         <Button
             android:id="@+id/week"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/tp_button"
+            android:fontFamily="@font/vogue"
             android:onClick="onClickWeek"
-            android:text="Week" />
+            android:padding="2sp"
+            android:paddingTop="2sp"
+            android:paddingBottom="2sp"
+            android:text="Week"
+            android:textColor="@color/colorBackground" />
 
-        <Button
-            android:id="@+id/month"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="MONTH" />
 
         <Button
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/tp_button"
+            android:fontFamily="@font/vogue"
             android:onClick="onClickSettings"
-            android:text="Settings" />
+            android:padding="2sp"
+            android:paddingTop="2sp"
+            android:paddingBottom="2sp"
+            android:text="Settings"
+            android:textColor="@color/colorBackground" />
     </LinearLayout>
 
     <com.github.florent37.shapeofview.shapes.ArcView
         android:id="@+id/header"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="320sp"
         android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -92,9 +107,9 @@
         android:shadowRadius="4"
         android:text="Trinity Pawling Schedule"
         android:textColor="#00274C"
-        android:textSize="30sp"
+        android:textSize="36sp"
         app:fontFamily="@font/vogue"
-        app:layout_constraintBottom_toTopOf="@+id/linear"
+        app:layout_constraintBottom_toBottomOf="@+id/header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/header" />

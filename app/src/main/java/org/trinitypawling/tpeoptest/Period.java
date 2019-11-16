@@ -1,6 +1,7 @@
 package org.trinitypawling.tpeoptest;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -464,10 +465,11 @@ public class Period {
             findNextPeriod(now).drawNext(c);
     }
 
-    public static void drawTodayPeriods(Canvas c) {
+    public static void drawTodayPeriods(Canvas c, int day) {
         for (Period p :
                 periods) {
-            if (p.getStart().getDay() == new WTime().getDay())
+            int today = p.getStart().getDay();
+            if (today == day)
                 p.draw(c);
         }
     }
@@ -571,18 +573,20 @@ public class Period {
         paint.setStyle(Paint.Style.STROKE);
         paint.setTextSize(20);
         paint.setStrokeWidth(2);
-        paint.setAntiAlias(true);
+        paint.setColor(Color.WHITE);
 
         int dayOfWeek = start.getDay();
 
-        WTime eight = new WTime(dayOfWeek, 7, 30);
+        WTime eight = new WTime(dayOfWeek, 8, 00);
         int cs = (start.ticks - eight.ticks) / 150;
         int ce = (end.ticks - eight.ticks) / 150;
 
         Rect areaRect = new Rect(150 * (dayOfWeek - 1) + 100, cs, 150 * (dayOfWeek - 1) + 250, ce);
-        RectF bounds = new RectF(areaRect);
+        Paint bgPaint = new Paint();
+        bgPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        bgPaint.setARGB(90, 255, 203, 5);
 
-        c.drawRect(areaRect, paint);
+        c.drawRect(areaRect, bgPaint);
         drawText(subject, c, areaRect, -40);
         drawText(period, c, areaRect, -15);
 
@@ -591,8 +595,7 @@ public class Period {
         c.drawText(end.getHourAMPM() + ":" + end.getMinuteS(), end.getHourAMPM() > 9 ?
                 150 * (dayOfWeek - 1) + 194 : 150 * (dayOfWeek - 1) + 203, ce - 8, paint);
 
-//        c.drawText(getPeriod(), 180 * (dayOfWeek - 1) + 140, (ce + cs) / 2, paint);
-//        c.drawText(getTeacher(), 180 * (dayOfWeek - 1) + 105, ((ce - cs) / 3 + 75) + cs, paint);
+
     }
 
     public void drawText(String text, Canvas c, Rect areaRect, int offset) {
@@ -601,8 +604,9 @@ public class Period {
         paint.setStyle(Paint.Style.STROKE);
         paint.setTextSize(20);
         paint.setStrokeWidth(2);
-        paint.setAntiAlias(true);
-        c.drawRect(areaRect, paint);
+        //paint.setAntiAlias(true);
+        paint.setColor(Color.WHITE);
+
         if (extend) offset += 25;
         if (text.length() > 11 && text.split(" ", 3).length > 1) {
             String[] temp = text.split(" ", 3);

@@ -1,8 +1,10 @@
 package org.trinitypawling.tpeoptest;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
@@ -39,19 +41,21 @@ public class DayActivity extends AppCompatActivity {
          */
 
         protected void onDraw(Canvas canvas) {
+            Resources res = getResources();
+            Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.logo_bg);
             super.onDraw(canvas);
             int x = getWidth();
             int y = getHeight();
             int radius = 100;
             Paint paint = new Paint();
-            paint.setStyle(Paint.Style.STROKE);
+            paint.setStyle(Paint.Style.FILL_AND_STROKE);
             paint.setStrokeWidth(2);
-            paint.setColor(Color.WHITE);
-            canvas.drawPaint(paint);
+            canvas.drawBitmap(bitmap.copy(Bitmap.Config.ARGB_8888, true), 0, 0, paint);
 
             //Today's periods are drawn
 
-            Period.drawTodayPeriods(canvas);
+            int today = new WTime().getDay();
+            Period.drawTodayPeriods(canvas, today);
 
         }
     }
