@@ -4,10 +4,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,23 +51,21 @@ public class ScrollingActivity extends AppCompatActivity {
 
         protected void onDraw(Canvas canvas) {
             Resources res = getResources();
-            Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.logo_bg);
-            DisplayMetrics metrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.logo_blugold);
             super.onDraw(canvas);
             int x = bitmap.getWidth();
             int y = bitmap.getHeight();
-            int radius = 100;
-            float scaleWidth = metrics.scaledDensity;
-            float scaleHeight = metrics.scaledDensity;
-            Matrix matrix = new Matrix();
-            matrix.postScale(scaleWidth, scaleHeight);
             Paint paint = new Paint();
             paint.setStyle(Paint.Style.FILL_AND_STROKE);
             paint.setStrokeWidth(2);
-            bitmap = Bitmap.createBitmap(bitmap, 0, 0, x, y, matrix, true);
-            canvas.drawBitmap(bitmap.copy(Bitmap.Config.ARGB_8888, true), 0, 0, paint);
 
+            //Find the dimensions of the background image and the screen size
+            Rect source, dest;
+            source = new Rect(0, 0, x, y);//size of bitmap
+            dest = new Rect(0, 0, this.getWidth(), this.getHeight());//size of this view
+
+            //Draw image and scale it to the size of the screen, dest
+            canvas.drawBitmap(bitmap, source, dest, null);//scale bitmap from src to dst
             ////Week's periods are drawn
 
             Period.drawAllPeriods(canvas);

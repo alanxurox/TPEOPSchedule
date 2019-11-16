@@ -77,6 +77,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shape_arc_height="26dp"
+        android:outlineAmbientShadowColor="@color/tp_gold"
         app:shape_arc_position="bottom">
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -84,13 +85,15 @@
             android:layout_height="match_parent"
             android:alpha="0.7"
             android:scaleType="centerCrop"
+            android:outlineAmbientShadowColor="@color/tp_gold"
             app:srcCompat="@drawable/gardiblur" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0.3"
-            android:background="@drawable/radial" />
+            android:background="@drawable/radial"
+            android:outlineAmbientShadowColor="@color/tp_gold" />
 
     </com.github.florent37.shapeofview.shapes.ArcView>
 
