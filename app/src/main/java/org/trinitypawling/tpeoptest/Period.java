@@ -584,7 +584,7 @@ public class Period {
         Rect areaRect = new Rect(150 * (dayOfWeek - 1) + 100, cs, 150 * (dayOfWeek - 1) + 250, ce);
         Paint bgPaint = new Paint();
         bgPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        bgPaint.setARGB(90, 255, 203, 5);
+        bgPaint.setARGB(90, 255, 255, 255);
 
         c.drawRect(areaRect, bgPaint);
         drawText(subject, c, areaRect, -40);
