@@ -5,8 +5,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,13 +45,20 @@ public class DayActivity extends AppCompatActivity {
         protected void onDraw(Canvas canvas) {
             Resources res = getResources();
             Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.logo_bg);
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
             super.onDraw(canvas);
-            int x = getWidth();
-            int y = getHeight();
+            int x = bitmap.getWidth();
+            int y = bitmap.getHeight();
             int radius = 100;
+            float scaleWidth = metrics.scaledDensity;
+            float scaleHeight = metrics.scaledDensity;
+            Matrix matrix = new Matrix();
+            matrix.postScale(scaleWidth, scaleHeight);
             Paint paint = new Paint();
             paint.setStyle(Paint.Style.FILL_AND_STROKE);
             paint.setStrokeWidth(2);
+            bitmap = Bitmap.createBitmap(bitmap, 0, 0, x, y, matrix, true);
             canvas.drawBitmap(bitmap.copy(Bitmap.Config.ARGB_8888, true), 0, 0, paint);
 
             //Today's periods are drawn
