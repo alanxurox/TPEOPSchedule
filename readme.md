@@ -12,3 +12,4 @@ TPEOPtest is a schedule app made exclusively for Trinity Pawling Students to hav
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
+[Trinity Pawling School](https://www.trinitypawling.org/academics/practicum-for-civic-leadership)
