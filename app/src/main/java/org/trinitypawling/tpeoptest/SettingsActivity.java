@@ -1,5 +1,6 @@
 package org.trinitypawling.tpeoptest;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -86,10 +87,7 @@ public class SettingsActivity extends AppCompatActivity {
             schedule.add(editText.getText().toString());
         }
 
-        if (aSwitch.isChecked())
-            Period.loadPeriodsB();
-        else
-            Period.loadPeriodsA();
+        Period.isAWeek = aSwitch.isChecked();
 
 
         saveData();
@@ -100,31 +98,19 @@ public class SettingsActivity extends AppCompatActivity {
      * On exit, this method stores the data, loads the periods into the graphics
      */
 
-   /* protected void onDestroy() {
+    protected void onDestroy() {
         super.onDestroy();
-        schedule.clear();
 
-        //Iterates through the autocompletetextviews with string tv + i, which is the id of the text views
-
-        for (int i = 1; i <= 7; i++) {
-            String viewID = "tv" + i;
-            int rID = getResources().getIdentifier(viewID, "id", getPackageName());
-            AutoCompleteTextView editText = findViewById(rID);
-
-            //add to the schedule array list
-
-            schedule.add(editText.getText().toString());
-        }
-
-        if (aSwitch.isChecked())
-            Period.loadPeriodsB();
-        else
+        if (Period.isAWeek)
             Period.loadPeriodsA();
+        else
+            Period.loadPeriodsB();
+
+        Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+        //startActivity(intent);
 
 
-        saveData();
-
-    }*/
+    }
 
     /**
      * Method store data using Google GSON and sharedPreferences

@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference courseRef = rootRef.child("Course");
     static MyDrawable myDrawable;
+    static boolean loaded;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-
+        loaded = false;
         /*
         Attempted to get the SharedPreferences reference, tried both two, didn't work.
          */
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
      */
 
     public void updateViews() {
+        loaded = true;
         if (Period.AWeek())
             Period.loadPeriodsA(new FireBaseCallback() {
                 @Override
@@ -158,8 +160,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                     Course.setCourses(COURSES_List);
 
-                    loadData();
-                    updateViews();
+                    if (!loaded) {
+                        loadData();
+                        updateViews();
+                    }
 
 
                     //TODO fix bug firebase runs before this. In period class onDataChange cannot static findviewbyid
@@ -175,6 +179,14 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        loadData();
+        updateViews();
     }
 
     public void onCallback() {
@@ -204,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Start day activity intent
+     *
      * @param view
      */
 

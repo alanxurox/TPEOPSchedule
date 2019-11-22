@@ -1,6 +1,6 @@
 # TPEOPtest
 
-TPEOPtest is a schedule app made exclusively for Trinity Pawling Students to have a convenient schedule on android phones.
+TPEOPtest is a schedule app made exclusively for Trinity Pawling Students to have a convenient schedule on android phones. 
 
 ## App Showcase
 ![0](https://github.com/alanxurox/TPEOPSchedule/blob/master/images/Screenshots/0.jpg)

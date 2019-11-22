@@ -61,6 +61,7 @@ public class DayActivity extends AppCompatActivity {
 
             //Today's periods are drawn
             int today = new WTime().getDay();
+
             Period.drawTodayPeriods(canvas, today);
 
         }

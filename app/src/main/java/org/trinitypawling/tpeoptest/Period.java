@@ -85,6 +85,7 @@ public class Period {
                             p.setRoom(course.getClassRoom());
                         }
                     } catch (NumberFormatException e) {
+                    } catch (NullPointerException e) {
                     }
                 }
             }

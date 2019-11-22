@@ -20,8 +20,8 @@ public class MyDrawable extends Drawable {
         WTime now = new WTime();
 
         //Draw the periods with the current canvas and time
-
-        Period.drawMainPeriods(canvas, now);
+        if (Period.periods.size() > 0)
+            Period.drawMainPeriods(canvas, now);
 
     }
 
