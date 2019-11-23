@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         if (Period.AWeek())
             Period.loadPeriodsA(new FireBaseCallback() {
                 @Override
+                
+                //Only when periods are loaded, the schedule would be drawn
                 public void onCallBack(List<?> list) {
                     myDrawable = new MyDrawable();
                     ImageView imageView = findViewById(R.id.imageView);
@@ -85,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
         else
             Period.loadPeriodsB(new FireBaseCallback() {
                 @Override
+                
+                //Only when periods are loaded, the schedule would be drawn
                 public void onCallBack(List<?> list) {
                     myDrawable = new MyDrawable();
                     ImageView imageView = findViewById(R.id.imageView);
@@ -159,7 +163,9 @@ public class MainActivity extends AppCompatActivity {
                         );
                     }
                     Course.setCourses(COURSES_List);
-
+                    
+                    
+                    //Only if periods are empty, load them
                     if (!loaded) {
                         loadData();
                         updateViews();

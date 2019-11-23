@@ -96,6 +96,7 @@ public class Period {
 
     /**
      * Method to load the a week times and period numbers.
+     * @param fireBaseCallback from MainActivity that holds the drawing functions
      */
     public static void loadPeriodsA(final FireBaseCallback fireBaseCallback) {
         periods.clear();
@@ -146,7 +147,9 @@ public class Period {
 
                     //After setting the period, load the courses to show the teacher, subject, and period
                     loadCourses();
-
+                    
+                    
+                    //After loading the periods, draw the schedule in MainActivity
                     fireBaseCallback.onCallBack(periods);
                 }
 
@@ -158,6 +161,9 @@ public class Period {
         }
     }
 
+    /**
+     * Method to load the a week times and period numbers.
+     */
     public static void loadPeriodsA() {
         periods.clear();
         PERIOD_LIST.clear();
@@ -222,11 +228,12 @@ public class Period {
         isAWeek = periods.size() < 33;
         return isAWeek;
     }
-
+    
     /**
      * Method to load the b week times and period numbers.
+     * @param fireBaseCallback from MainActivity that holds the drawing functions
      */
-
+    
     public static void loadPeriodsB(final FireBaseCallback fireBaseCallback) {
         periods.clear();
         PERIOD_LIST.clear();
@@ -287,7 +294,9 @@ public class Period {
 
                     //After setting the period, load the courses to show the teacher, subject, and period
                     loadCourses();
-
+                    
+                    
+                    //After loading the periods, draw schedule
                     fireBaseCallback.onCallBack(periods);
                 }
 
@@ -299,6 +308,10 @@ public class Period {
         }
     }
 
+
+    /**
+     * Method to load the a week times and period numbers.
+     */
     public static void loadPeriodsB() {
         periods.clear();
         PERIOD_LIST.clear();
@@ -598,7 +611,9 @@ public class Period {
 
 
     }
-
+    
+    
+    //Helper method that draws the text on the schedule
     public void drawText(String text, Canvas c, Rect areaRect, int offset) {
         RectF bounds = new RectF(areaRect);
         TextPaint paint = new TextPaint();
@@ -607,7 +622,8 @@ public class Period {
         paint.setStrokeWidth(2);
         //paint.setAntiAlias(true);
         paint.setColor(Color.WHITE);
-
+        
+        //Check if the text needs to be wrapped so that it doesnt go off the border
         if (extend) offset += 25;
         if (text.length() > 11 && text.split(" ", 3).length > 1) {
             String[] temp = text.split(" ", 3);
@@ -618,6 +634,8 @@ public class Period {
                 strings[0] = temp[0] + " " + strings[0];
             } else setExtend(false);
             for (String s : strings) {
+            
+                //Create a rectangle with the dimensions of the period
                 bounds = new RectF(areaRect);
                 bounds.right = paint.measureText(s, 0, s.length());
                 bounds.bottom = paint.descent() - paint.ascent();
@@ -625,8 +643,11 @@ public class Period {
                 bounds.top += (areaRect.height() - bounds.bottom) / 2.0f;
 
                 c.drawText(s, bounds.left, bounds.top - paint.ascent() + offset, paint);
+                
+                //Move next line lower
                 offset += paint.descent() - paint.ascent();
             }
+            //if text does not need to be wrapped, center it and draw it
         } else {
             bounds.right = paint.measureText(text, 0, text.length());
             bounds.bottom = paint.descent() - paint.ascent();

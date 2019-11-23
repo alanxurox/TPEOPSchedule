@@ -50,6 +50,8 @@ public class ScrollingActivity extends AppCompatActivity {
          */
 
         protected void onDraw(Canvas canvas) {
+        
+            //Background image tp logo
             Resources res = getResources();
             Bitmap bitmap = BitmapFactory.decodeResource(res, R.drawable.logo_blugold);
             super.onDraw(canvas);
